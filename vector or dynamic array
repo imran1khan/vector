@@ -1,0 +1,275 @@
+#include<iostream>
+using namespace std;
+class darray
+{
+public:
+	int getelement(int index)
+	{
+		if (count>0 && index<=(count-1))
+		{
+			return array[index];
+		}
+		return array[count + 1];
+	}
+	void printArray()
+	{
+		cout << "elements in the array\n";
+		for (int i = 0; i < count; i++)
+		{
+			cout << array[i];
+		}
+	}
+	int search(int key)
+	{
+		for (int i = 0; i < count; i++)
+		{
+			if(array[i]==key) 
+			{
+				return i;
+			}
+		}
+		return -1;
+	}
+	void pushfront(int value)
+	{
+		if (count==size)
+		{
+			growArray();
+		}
+		for (int i = 0; i < count; i++)
+		{
+			array[count - i] = array[count - i - 1];
+		}
+		array[0] = value;
+		count++;
+	}
+	void pushback(int value)
+	{
+		if (count==size)
+		{
+			growArray();
+		}
+		array[count] = value;
+		count++;
+	}
+	void popfront()
+	{
+		if (count>0)
+		{
+			for (int i = 0; i < count; i++)
+			{
+				array[i] = array[i + 1];
+			}
+			array[count - 1] = 0;
+			count--;
+			if (count == (size / 2))
+			{
+				srinkArray();
+			}
+		}
+	}
+	void popback(void)
+	{
+		if (count>0)
+		{
+			array[count - 1] = 0;
+			count--;
+			if (count == (size / 2))
+			{
+				srinkArray();
+			}
+		}
+	}
+	void pushindex(int index,int value)
+	{
+		if (count==size)
+		{
+			growArray();
+		}
+		if (index<count)
+		{
+			for (int i = count-1; i >= index; i--)
+			{
+				array[count] = array[count - 1];
+			}
+			array[index] = value;
+			count++;
+		}
+		else
+		{
+			cout << "\nindex is too big\n";
+		}
+	}
+	void popindex(int index)
+	{
+		if (index<count)
+		{
+			for (int i = index; i < count; i++)
+			{
+				array[i] = array[i + 1];
+			}
+			array[count - 1] = 0;
+			count--;
+		}
+		else
+		{
+			cout << "\nindex is too big\n";
+		}
+		if (count == (size / 2))
+		{
+			srinkArray();
+		}
+	}
+	int getsize()
+	{
+		return size;
+	}
+	int getcount()
+	{
+		return count;
+	}
+	int* getaddress()
+	{
+		int* p = array;
+		return p;
+	}
+	bool isempty()
+	{
+		if (count==0)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	darray();
+	darray(int size);
+	~darray();
+
+private:
+	int size, count;
+	int* array=NULL;
+
+	void growArray()
+	{
+		int* temp = new int[size * 2];
+		size = size * 2;
+		for (int i = 0; i < count; i++)
+		{
+			temp[i] = array[i];
+		}
+		delete[]array;
+		array = temp;
+	}
+	void srinkArray()
+	{
+		size = count;
+		int* temp1 = new int[size];
+		for (int i = 0; i < count; i++)
+		{
+			temp1[i] = array[i];
+		}
+		delete[]array;
+		array = temp1;
+	}
+
+};
+
+darray::darray()
+{
+	count = 0;
+	size = 1;
+	array = new int[size];
+}
+darray::darray(int size)
+{
+	count = 0;
+	this->size = size;
+	array = new int[size];
+}
+darray::~darray()
+{
+	delete[]array;
+	array = NULL;
+}
+int main()
+{
+	darray a;
+	if (a.isempty())
+	{
+		cout << "empty\n";
+	}
+	else
+	{
+		cout << "not empty\n";
+	}
+	a.pushback(10);
+	a.pushback(20);
+	a.pushback(30);
+	a.pushback(40);
+	a.pushback(50);
+	a.pushback(60);
+	a.pushfront(11);
+	a.pushfront(23);
+	a.pushfront(9);
+	cout<<"index value of = 50 "<<" is " << a.search(50) << " " << endl;
+	int c = a.getcount(),s=a.getsize();
+	//int* p1 = a.getaddress();
+	//for (int i = 0; i < c; i++)
+	//{
+	//	cout << *(p1 + i)<<" ";
+	//}
+	for (int i = 0; i < c; i++)
+	{
+		cout << a.getelement(i)<<" ";
+	}
+	for (int i = 0; i < 2; i++)
+	{
+		a.popfront();
+	}
+	cout << "\nsize of the array = " << s << endl;
+	cout << "\nnumber of element = " << c << endl;
+	cout << "\nnew array\n";
+	c = a.getcount(), s = a.getsize();
+	for (int i = 0; i < c; i++)
+	{
+		cout << a.getelement(i) << " ";
+	}
+	cout << "\nsize of the array = " << s << endl;
+	cout << "\nnumber of element = " << c << endl;
+
+	cout << "\nnew array\n";
+	a.popindex(2);
+	//a.popindex(10);// this one is going to show error
+	c = a.getcount(), s = a.getsize();
+	for (int i = 0; i < c; i++)
+	{
+		cout << a.getelement(i) << " ";
+	}
+	cout << "\nsize of the array = " << s << endl;
+	cout << "\nnumber of element = " << c << endl;
+
+	cout << "\nnew array\n";
+	a.pushindex(2,300);
+	//a.pushindex(10,500);// this one is going to show error
+	c = a.getcount(), s = a.getsize();
+	for (int i = 0; i < c; i++)
+	{
+		cout << a.getelement(i) << " ";
+	}
+	cout << "\nsize of the array = " << s << endl;
+	cout << "\nnumber of element = " << c << endl;
+
+	if (a.isempty())
+	{
+		cout << "empty";
+	}
+	else
+	{
+		cout << "not empty";
+	}
+	//a.printArray();
+	return 0;
+}
